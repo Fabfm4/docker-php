@@ -1,0 +1,28 @@
+version: '2'
+services:
+  web:
+    ports:
+      - "80:80"
+    build: .
+    volumes:
+      - ./src:/var/www/html
+      - ./files/php.ini:/usr/local/etc/php.ini
+      - ./files/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    tty: true
+    # env_file:
+     # - ./files/backend.local.com.env
+    links:
+      - mysql
+    container_name: benandfrank-web
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./database/config:/etc/mysql/conf.d
+      - ./database/data:/sqlfiles
+      - ./database/datastructure:/var/lib/mysql
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_DATABASE=benandfrank
+    container_name: benandfrank-db
